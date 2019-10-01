@@ -70,6 +70,48 @@ int PowR2(int a, int b) {
     return res;
 }
 
+int CountProgrammCycle(int begin, int end) {
+    int count = 0;
+
+    for (int i = begin; i <= end/2; i++) {
+        int p = 0;
+        int tmp = 0;
+        do
+        {
+            tmp = i * Pow(2, p);
+            p++;
+            count++;
+        }
+        while(tmp <= end);
+        count--;
+    }
+
+    return count;
+}
+
+int CountProgrammR(int begin, int end, int p) {
+
+    int res = 1;
+
+    if (begin <= end/2)
+    {
+        p++;
+
+        int tmp = begin * Pow(2, p - 1);
+
+        if (tmp > end)
+        {
+            begin++;
+            p = 0;
+            res--;
+        }
+
+        res = res + CountProgrammR(begin, end, p);
+    }
+
+    return res;
+}
+
 void Task1() {
     int n = 0;
     printf("Введите целое положительное число: ");
@@ -87,39 +129,33 @@ void Task2() {
     scanf("%d", &b);
 
     printf("Без рекурсии: \n");
-    int res = Pow(a,b);
-    printf("%d в степени %d равно %d\n", a, b, res);
+    printf("%d в степени %d равно %d\n", a, b, Pow(a,b));
 
     printf("Рекурсивно: \n");
-    res = PowR(a,b);
-    printf("%d в степени %d равно %d\n", a, b, res);
+    printf("%d в степени %d равно %d\n", a, b, PowR(a,b));
 
     printf("Рекурсивно, используя четность степени : \n");
-    res = PowR2(a,b);
-    printf("%d в степени %d равно %d\n\n", a, b, res);
+    printf("%d в степени %d равно %d", a, b, PowR2(a,b));
 }
 
 void Task3() {
-    int n = 3;
-    int target = 20;
+    int begin = 3;
+    int end = 20;
 
     printf("С использованием массива: \n");
-    //int res = Pow(a,b);
-    //printf("%d в степени %d равно %d\n", a, b, res);
+    printf("Количество программ: %d\n", CountProgrammCycle(begin, end));
 
-    //printf("Рекурсивно: \n");
-    //res = PowR(a,b);
-    //printf("%d в степени %d равно %d\n", a, b, res);
+    printf("С использованием рекурсии: \n");
+    int p = 0;
+    int count = CountProgrammR(begin, end, p) - 1;
+    printf("Количество программ: %d", count);
 
-    //printf("Рекурсивно, используя четность степени : \n");
-    //res = PowR2(a,b);
-    //printf("%d в степени %d равно %d\n\n", a, b, res);
 }
 
 int main() {
     //1. Реализовать функцию перевода из 10 системы в двоичную используя рекурсию.
     printf("Задача 1\n");
-    //Task1();
+    Task1();
     printf("\n\n");
     
     //2. Реализовать функцию возведения числа a в степень b:
