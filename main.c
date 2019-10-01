@@ -70,6 +70,7 @@ int PowR2(int a, int b) {
     return res;
 }
 
+//Подсчет количества программ с использованием циклов
 int CountProgrammCycle(int begin, int end) {
     int count = 0;
 
@@ -89,8 +90,8 @@ int CountProgrammCycle(int begin, int end) {
     return count;
 }
 
+//Подсчет количества программ с использованием рекурсии
 int CountProgrammR(int begin, int end, int p) {
-
     int res = 1;
 
     if (begin <= end/2)
