@@ -69,12 +69,50 @@ int shaker(int* arr, int len) {
     return operations;
 }
 
+//Pigeon Hole Sort
+void pigeonHoleSort(int* arr, int len) {
+    //Ищем диапазон элементов массива
+    int max = 0;
+    int min = 0;
+
+    if (len > 0) {
+        max = arr[0];
+        min = max;
+    }
+
+    for (int i = 0; i < len; i++)
+        if (arr[i] > max)
+            max = arr[i];
+        else if (arr[i] < min)
+            min = arr[i];
+
+    //Создаем массив с количеством элементов max - min + 1
+    int size = max - min + 1;
+
+    int arrC[size];
+
+    for (int i = 0; i < size; i++)
+        arrC[i] = 0;
+
+    for (int i = 0; i < len; i++) {
+        arrC[arr[i] - min] = arr[i];
+    }
+
+    int j = 0;
+    for (int i = 0; i < size; i++) {
+        if (arrC[i]) {
+            arr[j] = arrC[i];
+            j++;
+        }
+    }
+}
+
 int main(void)
 {
-    int size = 9;
+    int size = 10;
 
     printf("Неоптимизированный пузырьковый метод\n");
-    int arr1[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+    int arr1[10] = {9, 8, 7, 7, 6, 5, 4, 3, 2, 1};
     printArray(arr1, size);
     int oper = bubbleSort(arr1, size);
     printArray(arr1, size);
@@ -83,7 +121,7 @@ int main(void)
     //-------------------------------------------------------------------------------
 
     printf("Oптимизированный пузырьковый метод\n");
-    int arr2[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+    int arr2[10] = {9, 8, 7, 7, 6, 5, 4, 3, 2, 1};
     printArray(arr2, size);
     oper = bubbleSortOpt(arr2, size);
     printArray(arr2, size);
@@ -92,11 +130,20 @@ int main(void)
     //-------------------------------------------------------------------------------
 
     printf("Метод шейкер\n");
-    int arr3[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+    int arr3[10] = {9, 8, 7, 7, 6, 5, 4, 3, 2, 1};
     printArray(arr3, size);
     oper = shaker(arr3, size);
     printArray(arr3, size);
     printf("Количество операций: %d\n\n", oper);
+
+    //-------------------------------------------------------------------------------
+
+    printf("Pigeon Hole Sort\n");
+    int arr4[size];
+    fillArray(arr4, size);
+    printArray(arr4, size);
+    pigeonHoleSort(arr4, size);
+    printArray(arr4, size);
 
     return 0;
 }
