@@ -1,149 +1,72 @@
 #include <stdio.h>
-#include <stdlib.h>
+#define SIZE 7
 
-void fillArray(int* arr, int len) {
-    for (int i = 0; i < len; i++)
-        arr[i] = rand() % 100;
+void print2Array(int n, int m, int arr[n][m]) {
+    for(int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++)
+            printf("%d ", arr[i][j]);
+        printf("\n");
+    }
 }
 
-void printArray(int* arr, int len) {
-    for (int i = 0; i < len; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
+int routes(int x, int y) {
+    if (x == 0 || y == 0) return 1;
+    else return routes(x - 1, y) + routes(x, y - 1);
 }
 
-void swap(int *a, int *b) {
-    *a ^= *b;
-    *b ^= *a;
-    *a ^= *b;
-}
-
-//Пузырьковый метод (НЕоптимизированный)
-int bubbleSort(int* arr, int len) {
-    int operations = 0;
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < len - 1; j++) {
-            operations++;
-
-            if (arr[j] > arr[j + 1])
-                swap(&arr[j], &arr[j + 1]);
-        }
-    }
-
-    return operations;
-}
-
-//Пузырьковый метод (оптимизированный)
-int bubbleSortOpt(int* arr, int len) {
-    int operations = 0;
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < len - 1 - i; j++) {
-            operations++;
-
-            if (arr[j] > arr[j + 1])
-                swap(&arr[j], &arr[j + 1]);
-        }
-    }
-
-    return operations;
-}
-
-//Шейкер
-int shaker(int* arr, int len) {
-    int operations = 0;
-
-    for (int i = 0; i < len / 2; i++) {
-        for (int j = i; j < len - 1 - i; j++) {
-            operations++;
-            if (arr[j] > arr[j + 1])
-                swap(&arr[j], &arr[j + 1]);
-        }
-
-        for (int j = len - 2 - i; j > i; j--) {
-            operations++;
-            if (arr[j] < arr[j - 1])
-                swap(&arr[j], &arr[j - 1]);
-        }
-    }
-
-    return operations;
-}
-
-//Pigeon Hole Sort
-void pigeonHoleSort(int* arr, int len) {
-    //Ищем диапазон элементов массива
-    int max = 0;
-    int min = 0;
-
-    if (len > 0) {
-        max = arr[0];
-        min = max;
-    }
-
-    for (int i = 0; i < len; i++)
-        if (arr[i] > max)
-            max = arr[i];
-        else if (arr[i] < min)
-            min = arr[i];
-
-    //Создаем массив с количеством элементов max - min + 1
-    int size = max - min + 1;
-
-    int arrC[size];
-
-    for (int i = 0; i < size; i++)
-        arrC[i] = 0;
-
-    for (int i = 0; i < len; i++) {
-        arrC[arr[i] - min] = arr[i];
-    }
-
-    int j = 0;
-    for (int i = 0; i < size; i++) {
-        if (arrC[i]) {
-            arr[j] = arrC[i];
-            j++;
-        }
-    }
+int routesBarrier(int x, int y, int desk[SIZE][SIZE]) {
+    if (desk[x][y] == 0)
+        return 0;
+    else if (x == 0 || y == 0)
+        return 1;
+    else if (x == 0 && y != 0 && desk[x][y] == 0)
+        return routesBarrier(x, y - 1, desk);
+    else if (y == 0 && x != 0 && desk[x][y] == 0)
+        return routesBarrier(x - 1, y, desk);
+    else return routesBarrier(x - 1, y, desk) + routesBarrier(x, y - 1, desk);
 }
 
 int main(void)
 {
-    int size = 10;
+    printf("Кол-во маршрутов без препятствий\n");
+    for (int i = 0; i < 7; i++) {
+        for (int j = 0; j < 7; j++)
+            printf("%7d", routes(i, j));
+        printf("\n");
+    }
 
-    printf("Неоптимизированный пузырьковый метод\n");
-    int arr1[10] = {9, 8, 7, 7, 6, 5, 4, 3, 2, 1};
-    printArray(arr1, size);
-    int oper = bubbleSort(arr1, size);
-    printArray(arr1, size);
-    printf("Количество операций: %d\n\n", oper);
+    printf("\n");
 
-    //-------------------------------------------------------------------------------
+    int desk[SIZE][SIZE] = {0};
 
-    printf("Oптимизированный пузырьковый метод\n");
-    int arr2[10] = {9, 8, 7, 7, 6, 5, 4, 3, 2, 1};
-    printArray(arr2, size);
-    oper = bubbleSortOpt(arr2, size);
-    printArray(arr2, size);
-    printf("Количество операций: %d\n\n", oper);
+    printf("Расположение препятствий\n");
+    printf("0 - препятствие\n");
+    printf("1 - нет препятствия\n\n");
 
-    //-------------------------------------------------------------------------------
+    //Формирование массива без припятствий
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            desk[i][j] = 1;
 
-    printf("Метод шейкер\n");
-    int arr3[10] = {9, 8, 7, 7, 6, 5, 4, 3, 2, 1};
-    printArray(arr3, size);
-    oper = shaker(arr3, size);
-    printArray(arr3, size);
-    printf("Количество операций: %d\n\n", oper);
+    //Формирование препятствий
+    desk[0][3] = 0;
+    desk[0][4] = 0;
+    desk[2][2] = 0;
+    desk[4][1] = 0;
+    desk[4][0] = 0;
+    desk[6][5] = 0;
 
-    //-------------------------------------------------------------------------------
+    print2Array(SIZE, SIZE, desk);
 
-    printf("Pigeon Hole Sort\n");
-    int arr4[size];
-    fillArray(arr4, size);
-    printArray(arr4, size);
-    pigeonHoleSort(arr4, size);
-    printArray(arr4, size);
+
+    printf("\n");
+
+    printf("Кол-во маршрутов с препятствиями\n");
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++)
+            printf("%5d", routesBarrier(i, j, desk));
+        printf("\n");
+    }
 
     return 0;
 }
