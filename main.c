@@ -19,23 +19,24 @@ int routesBarrier(int x, int y, int desk[SIZE][SIZE]) {
         return 0;
     else if (x == 0 || y == 0)
         return 1;
-    else if (x == 0 && y != 0 && desk[x][y] == 0)
-        return routesBarrier(x, y - 1, desk);
-    else if (y == 0 && x != 0 && desk[x][y] == 0)
-        return routesBarrier(x - 1, y, desk);
     else return routesBarrier(x - 1, y, desk) + routesBarrier(x, y - 1, desk);
 }
 
 int main(void)
 {
+    //---------- Сделали на уроке ----------
     printf("Кол-во маршрутов без препятствий\n");
-    for (int i = 0; i < 7; i++) {
-        for (int j = 0; j < 7; j++)
-            printf("%7d", routes(i, j));
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++)
+            printf("%5d", routes(i, j));
         printf("\n");
     }
 
     printf("\n");
+
+    //-------------------------------------------
+    //1. *Количество маршрутов с препятствиями.
+    //Реализовать чтение массива с препятствием и нахождение количество маршрутов.
 
     int desk[SIZE][SIZE] = {0};
 
@@ -58,7 +59,6 @@ int main(void)
 
     print2Array(SIZE, SIZE, desk);
 
-
     printf("\n");
 
     printf("Кол-во маршрутов с препятствиями\n");
@@ -67,6 +67,11 @@ int main(void)
             printf("%5d", routesBarrier(i, j, desk));
         printf("\n");
     }
+
+    printf("\n");
+
+    //-------------------------------------------
+    //3. ***Требуется обойти конём шахматную доску размером NxM, пройдя через все поля доски по одному разу.
 
     return 0;
 }
