@@ -57,6 +57,7 @@ int main(void)
     desk[4][0] = 0;
     desk[6][5] = 0;
 
+    //Печать массива с припятствиями
     print2Array(SIZE, SIZE, desk);
 
     printf("\n");
