@@ -25,6 +25,7 @@ int routes(int x, int y) {
     else return routes(x - 1, y) + routes(x, y - 1);
 }
 
+//Обходим препятствия
 int routesBarrier(int x, int y, int n, int m, int desk[n][m]) {
     if (desk[x][y] == 0)
         return 0;
@@ -33,6 +34,7 @@ int routesBarrier(int x, int y, int n, int m, int desk[n][m]) {
     else return routesBarrier(x - 1, y, n, m, desk) + routesBarrier(x, y - 1, n, m, desk);
 }
 
+//Варианты хода коня относительно его текущего положения
 int stepX[] = {2, 2, -1, 1, -2, -2, -1, 1};
 int stepY[] = {1, -1, 2, 2, -1, 1, -2, -2};
 
@@ -114,6 +116,7 @@ int main(void)
 
     //-------------------------------------------
     //3. ***Требуется обойти конём шахматную доску размером NxM, пройдя через все поля доски по одному разу.
+    printf("Обходим доску конем\n");
     filling2Array(N, M, board, 0);
     searchSolution(1, 0, 0);
     print2Array(N, M, board);
