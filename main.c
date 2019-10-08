@@ -1,11 +1,21 @@
 #include <stdio.h>
-#define N 8
-#define M 8
+#include <stdlib.h>
+#define N 7
+#define M 7
+#define END 50
+
+int board[N][M];
+
+void filling2Array(int n, int m, int arr[n][m], int value) {
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            arr[i][j] = value;
+}
 
 void print2Array(int n, int m, int arr[n][m]) {
     for(int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++)
-            printf("%d ", arr[i][j]);
+            printf("%4d ", arr[i][j]);
         printf("\n");
     }
 }
@@ -21,6 +31,38 @@ int routesBarrier(int x, int y, int n, int m, int desk[n][m]) {
     else if (x == 0 || y == 0)
         return 1;
     else return routesBarrier(x - 1, y, n, m, desk) + routesBarrier(x, y - 1, n, m, desk);
+}
+
+int stepX[] = {2, 2, -1, 1, -2, -2, -1, 1};
+int stepY[] = {1, -1, 2, 2, -1, 1, -2, -2};
+
+int searchSolution(int n, int row, int col) {
+    if (n == END)
+        return 1;
+    int i = 0;
+    while(i < 8) {
+        if (row + stepX[i] < 0 || row + stepX[i] > N - 1 || col + stepY[i] < 0 || col + stepY[i] > M - 1) {
+            i++;
+            continue;
+        }
+
+        if (board[row + stepX[i]][col + stepY[i]] == 0) {
+            board[row + stepX[i]][col + stepY[i]] = n;
+
+            row += stepX[i];
+            col += stepY[i];
+
+            if (searchSolution(n + 1, row, col))
+                return 1;
+
+            board[row][col] = 0;
+        }
+        else {
+            i++;
+            continue;
+        }
+    }
+    return 0;
 }
 
 int main(void)
@@ -46,9 +88,7 @@ int main(void)
     printf("1 - нет препятствие\n\n");
 
     //Формирование массива без припятствий
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < M; j++)
-            desk[i][j] = 1;
+    filling2Array(N, M, desk, 1);
 
     //Формирование препятствий
     desk[0][3] = 0;
@@ -74,6 +114,9 @@ int main(void)
 
     //-------------------------------------------
     //3. ***Требуется обойти конём шахматную доску размером NxM, пройдя через все поля доски по одному разу.
+    filling2Array(N, M, board, 0);
+    searchSolution(1, 0, 0);
+    print2Array(N, M, board);
 
     return 0;
 }
