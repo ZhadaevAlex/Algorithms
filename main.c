@@ -71,6 +71,16 @@ T peek(Stack *st) {
     return st->head->data;
 }
 
+//Печать стека
+void printStack(Stack st) {
+    Node *current = st.head;
+
+    while (current != NULL) {
+        printf("%c", current->data);
+        current = current->next;
+    }
+}
+
 //Реализация очереди через двусвязный список
 typedef struct NodeTwo {
     T data;
@@ -125,6 +135,16 @@ T Dequeue(Queue *que) {
     return result;
 }
 
+//Печать очереди
+void printQueue(Queue que) {
+    NodeTwo *current = que.tail;
+
+    while (current != NULL) {
+        printf("%c", current->data);
+        current = current->prev;
+    }
+}
+
 //Функция проверки правильности скобок
 boolean checkBrace(char* str) {
     Stack stack;
@@ -154,6 +174,29 @@ boolean checkBrace(char* str) {
     return true;
 }
 
+//Копирование односвязного списка
+void copyLinkedList(Stack *st, Stack *stCopy) {
+    stCopy->size = 0;
+    stCopy->size = 0;
+    stCopy->head = NULL;
+
+    Stack stTmp;
+    stTmp.size = 0;
+    stTmp.head = NULL;
+
+    Node *current = st->head;
+
+    while (stTmp.size != st->size) {
+        push(&stTmp, current->data);
+        current = current->next;
+    }
+
+    while (stTmp.size > 0)
+        push(stCopy, pop(&stTmp));
+
+    //return true;
+}
+
 int main(void)
 {
     //1. Написать программу, которая определяет,
@@ -172,6 +215,8 @@ int main(void)
 
     //2. *Создать функцию, копирующую односвязный список
     //(то есть создает в памяти копию односвязного списка, без удаления первого списка).
+    printf("Задание 2. Копирование односвязного списка\n");
+
     Stack stack;
     stack.size = 0;
     stack.head = NULL;
@@ -180,8 +225,23 @@ int main(void)
     push(&stack, 'b');
     push(&stack, 'c');
 
+    Stack stackCopy;
+    stackCopy.size = 0;
+    stackCopy.head = NULL;
+
+    copyLinkedList(&stack, &stackCopy);
+
+    printf("Исходный односвязный список: ");
+    printStack(stack);
+    printf("\n");
+    printf("Копия односвязного списка: ");
+    printStack(stackCopy);
+
+    printf("\n\n");
+
     //3. *Реализовать очередь на основе двусвязного списка.
     printf("Задание 3. Реализация очереди\n");
+
     Queue q;
     q.size = 0;
     q.head = NULL;
@@ -193,8 +253,7 @@ int main(void)
     Enqueue(&q, 'd');
     Enqueue(&q, 'e');
 
-    while (q.size > 0)
-        printf("%c", Dequeue(&q));
+    printQueue(q);
 
     printf("\n");
     return 0;
