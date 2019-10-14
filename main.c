@@ -12,11 +12,31 @@ typedef struct Node {
     struct Node *parent;
 } Node;
 
+//Прямой обход
 void preOrderTravers(Node *root) {
     if (root) {
         printf("%d", root->data);
         preOrderTravers(root->left);
         preOrderTravers(root->right);
+    }
+}
+
+//Симметричный обход
+void inOrderTravers(Node *root) {
+    if (root) {
+        inOrderTravers(root->left);
+        printf("%d", root->data);
+        inOrderTravers(root->right);
+    }
+}
+
+//Обратный обход
+void postOrderTravers(Node *root) {
+    if (root) {
+        postOrderTravers(root->left);
+        postOrderTravers(root->right);
+        printf("%d", root->data);
+
     }
 }
 
@@ -59,27 +79,49 @@ Node* tree(int n) {
     return node;
 }
 
-int main(void)
-{
-    Node* t = tree(10);
-    printTree(t);
-    printf("\n");
-
-    char str[100];
-    printf("Введите последовательность символов: ");
-    scanf("%s", str);
+int hashAcsii(char* str) {
+    int result = 0;
 
     int len = strlen(str);
-
-    int result = 0;
 
     for (int i = 0; i < len; i++)
     {
         result += str[i];
     }
 
-    printf("%d ", result);
-    printf("%c ", result);
+    return result;
+}
+
+int main(void)
+{
+    Node* t = tree(10);
+    printTree(t);
+    printf("\n");
+
+    //1. Реализовать простейшую хэш-функцию.
+    //На вход функции подается строка, на выходе сумма кодов символов.
+    printf("Задание 1\n");
+    char str[100];
+    printf("Введите последовательность символов: ");
+    scanf("%s", str);
+
+    printf("Хэш-код: %d\n", hashAcsii(str));
+
+    printf("\n");
+
+    //2. Реализовать двоичное дерево поиска
+    //а) Добавить обход дерева различными способами;
+    //б) Реализовать поиск в двоичном дереве поиска;
+    printf("Задание 2\n");
+    printf("Прямой обход: ");
+    preOrderTravers(t);
+    printf("\n");
+    printf("Симмеричный обход: ");
+    inOrderTravers(t);
+    printf("\n");
+    printf("Обратный обход: ");
+    postOrderTravers(t);
+    printf("\n");
 
     return 0;
 }
