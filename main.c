@@ -104,17 +104,12 @@ boolean Enqueue(Queue *que, T value) {
     temp->next = que->head;
     temp->prev = NULL;
 
-    if (que->size > 0) {
+    if (que->head != NULL)
         que->head->prev = temp;
-    }
+    else
+        que->tail = temp;
 
     que->head = temp;
-
-    if (que->size == 0) {
-        que->tail = temp;
-    }
-    else if (que->size == 1)
-        que->tail->prev = que->head;
 
     que->size++;
 
@@ -129,8 +124,15 @@ T Dequeue(Queue *que) {
     T result = temp->data;
 
     que->tail = que->tail->prev;
-    que->size--;
+
+    if (que->size > 1)
+        que->tail->next = NULL;
+    else
+        que->head = NULL;
+
     free(temp);
+
+    que->size--;
 
     return result;
 }
@@ -158,12 +160,18 @@ boolean checkBrace(char* str) {
     {
         if (str[i] == '(' || str[i] == '[' || str[i] == '{')
                 push(&stack, str[i]);
-        else if (str[i] == ')' && peek(&stack) == '(')
-                pop(&stack);
-        else if (str[i] == ']' && peek(&stack) == '[')
-                pop(&stack);
-        else if (str[i] == '}' && peek(&stack) == '{')
-                pop(&stack);
+        else if (str[i] == ')') {
+            if (stack.size == 0 || pop(&stack) != '(')
+                return false;
+        }
+        else if (str[i] == ']') {
+            if (stack.size == 0 || pop(&stack) != '[')
+                return false;
+        }
+        else if (str[i] == '}') {
+            if (stack.size == 0 || pop(&stack) != '{')
+                return false;
+        }
         else
             continue;
     }
@@ -193,8 +201,6 @@ void copyLinkedList(Stack *st, Stack *stCopy) {
 
     while (stTmp.size > 0)
         push(stCopy, pop(&stTmp));
-
-    //return true;
 }
 
 int main(void)
