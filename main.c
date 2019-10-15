@@ -78,26 +78,6 @@ void insertNode(Node** tree, int value) {
     else tmp->data = value;
 }
 
-//1. Всегда используем один узел в качестве корня
-//2. Строим левое поддерево из n/2 элементов (L)
-//3. Строим правое поддерево из n-L-1 элементов
-Node* tree(int n) {
-    Node *node;
-    if (n == 0)
-        node = NULL;
-    else {
-        int value = arr[i++];
-        node = (Node*) malloc(sizeof(Node));
-        node->data = value;
-        int nL = n / 2;
-        int nR = n - nL - 1;
-        node->left = tree(nL);
-        node->right = tree(nR);
-    }
-
-    return node;
-}
-
 int hashAcsii(char* str) {
     int result = 0;
 
@@ -175,8 +155,19 @@ int main(void)
     Node *node = searchBinary(tree, a);
     if (node == NULL)
         printf("Искомое значение не найдено\n");
-    else
-        printf("Значение: %d\nЛевый узел: %d\nПравый узел: %d\n", node->data, node->left->data, node->right->data);
+    else {
+        printf("Значение: %d\n", node->data);
+        printf("Левый узел: ");
+        if (node->left != NULL)
+            printf("%d\n", node->left->data);
+        else
+            printf("%s\n", "NULL");
+        printf("Правый узел: ");
+        if (node->right != NULL)
+            printf("%d\n", node->right->data);
+        else
+            printf("%s\n", "NULL");
+    }
 
     return 0;
 }
