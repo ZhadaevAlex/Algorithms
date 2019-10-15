@@ -3,7 +3,6 @@
 #include <string.h>
 
 int arr[] = {5, 8, 7, 3, 0, 9, 1, 2, 4, 6};
-int i = 0;
 
 typedef struct Node {
     int data;
