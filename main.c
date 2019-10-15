@@ -9,7 +9,6 @@ typedef struct Node {
     int data;
     struct Node *left;
     struct Node *right;
-    struct Node *parent;
 } Node;
 
 //Прямой обход
@@ -36,7 +35,6 @@ void postOrderTravers(Node *root) {
         postOrderTravers(root->left);
         postOrderTravers(root->right);
         printf("%d", root->data);
-
     }
 }
 
@@ -57,6 +55,27 @@ void printTree(Node* root) {
             printf(")");
         }
     }
+}
+
+Node* getNode(int value) {
+    Node *tmp = (Node*) malloc(sizeof(Node));
+    tmp->data = value;
+    tmp->left = tmp->right = NULL;
+    return tmp;
+}
+
+void insertNode(Node** tree, int value) {
+    Node* tmp = NULL;
+    tmp = *tree;
+    if (*tree == NULL) {
+        *tree = getNode(value);
+        return;
+    }
+    else if (value > tmp->data)
+        insertNode(&tmp->right, value);
+    else if (value < tmp->data)
+        insertNode(&tmp->left, value);
+    else tmp->data = value;
 }
 
 //1. Всегда используем один узел в качестве корня
@@ -92,15 +111,30 @@ int hashAcsii(char* str) {
     return result;
 }
 
+Node* searchBinary(Node* root, int value) {
+    Node* result = NULL;
+
+    if (root == NULL) {
+        return NULL;
+    }
+    else {
+        if (value > root->data)
+            result = searchBinary(root->right, value);
+        else if (value < root->data)
+            result = searchBinary(root->left, value);
+        else if (value == root->data)
+            result = root;
+    }
+
+    return result;
+}
+
 int main(void)
 {
-    Node* t = tree(10);
-    printTree(t);
-    printf("\n");
-
     //1. Реализовать простейшую хэш-функцию.
     //На вход функции подается строка, на выходе сумма кодов символов.
     printf("Задание 1\n");
+
     char str[100];
     printf("Введите последовательность символов: ");
     scanf("%s", str);
@@ -113,15 +147,36 @@ int main(void)
     //а) Добавить обход дерева различными способами;
     //б) Реализовать поиск в двоичном дереве поиска;
     printf("Задание 2\n");
+
+    //Строим дерево
+    Node* tree = NULL;
+
+    for(int i = 0; i < 10; i++) {
+        insertNode(&tree, arr[i]);
+    }
+
+    printf("Скобочная запись дерева: ");
+    printTree(tree);
+    printf("\n");
     printf("Прямой обход: ");
-    preOrderTravers(t);
+    preOrderTravers(tree);
     printf("\n");
     printf("Симмеричный обход: ");
-    inOrderTravers(t);
+    inOrderTravers(tree);
     printf("\n");
     printf("Обратный обход: ");
-    postOrderTravers(t);
+    postOrderTravers(tree);
     printf("\n");
+
+    //Поиск
+    int a;
+    printf("Введите число для поиска: ");
+    scanf("%d", &a);
+    Node *node = searchBinary(tree, a);
+    if (node == NULL)
+        printf("Искомое значение не найдено\n");
+    else
+        printf("Значение: %d\nЛевый узел: %d\nПравый узел: %d\n", node->data, node->left->data, node->right->data);
 
     return 0;
 }
